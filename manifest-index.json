@@ -1,0 +1,36 @@
+{
+  "name": "Christ Praises",
+  "short_name": "Christ Praises",
+  "description": "Empowering Christian Connection and Testimonies",
+  "scope": "./",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "icons": [
+      {
+          "src": "splash_screens/icon.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "maskable"
+      },
+      {
+          "src": "splash_screens/icon.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any"
+      },
+      {
+          "src": "cp.jpeg",
+          "sizes": "1280x1280",
+          "type": "image/jpeg",
+          "purpose": "any"
+      },
+      {
+          "src": "cp.png",
+          "sizes": "1280x1280",
+          "type": "image/png",
+          "purpose": "maskable"
+      }
+  ]
+}
