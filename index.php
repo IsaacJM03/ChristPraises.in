@@ -1,21 +1,4 @@
-<html>
-    <head>
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="application-name" content="Christ Praises">
-        <meta name="apple-mobile-web-app-status-bar-style" content="default">
-        <meta name="apple-mobile-web-app-title" content="Christ Praises">
-        <meta name="msapplication-TileColor" content="#da532c">
-        <meta name="theme-color" content="#ffffff"> 
-        <link rel="manifest" href="manifest-index.json">
-        <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
-        <link rel="apple-touch-icon" sizes="180x180" href="splash_screens/icon.jpg">
-        <link rel="apple-touch-startup-image" href="splash_screens/icon.jpg">
-    </head>
-    <body>
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 // +--------------------------------------\----------------------------------+
 // | @author Deen Doughouz (DoughouzForest)
 // | @author_url 1: http://www.wowonder.com
@@ -1464,5 +1447,104 @@ echo Wo_Loadpage('container');
 mysqli_close($sqlConnect);
 unset($wo);
 ?>
+<html>
+<head>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="splash_screens_1/icon.jpg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#8784bb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Christ Praises">
+<meta name="application-name" content="Christ Praises">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- Splash Screens Code -->
+<script src="https://unpkg.com/ios-pwa-splash@1.0.0/cdn.min.js"></script>
+<script>
+            window.addEventListener('load', function() {
+                iosPWASplash('splash_screens/icon.png', '#ffffff');
+            });
+</script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "ae75fe66-ac4f-45d5-a30c-6499fa979085",
+    });
+  });
+</script>
+</head>
+<body>
+<script>
+if ('serviceWorker' in navigator) {
+    async function refreshServiceWorker() {
+        // Unregister all service workers
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (let registration of registrations) {
+            await registration.unregister();
+        }
+
+        // // Clear all caches
+        // const cacheNames = await caches.keys();
+        // for (let cacheName of cacheNames) {
+        //     await caches.delete(cacheName);
+        // }
+
+        // Register the new service worker
+        try {
+            const registration = await navigator.serviceWorker.register('/service-worker.js');
+            console.log('Service Worker re-registered with scope:', registration.scope);
+
+            // Ensure the new service worker is controlling the page as soon as possible
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    window.location.reload();
+                    refreshing = true;
+                }
+            });
+
+            // Check if there's a new service worker waiting to activate
+            if (registration.waiting) {
+                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }
+
+            // Check if there's a new service worker installing
+            if (registration.installing) {
+                registration.installing.addEventListener('statechange', function() {
+                    if (this.state === 'installed' && navigator.serviceWorker.controller) {
+                        this.postMessage({ type: 'SKIP_WAITING' });
+                    }
+                });
+            }
+
+        } catch (error) {
+            console.error('Service Worker registration failed:', error);
+        }
+    }
+
+    // Call the async function to refresh the service worker
+    refreshServiceWorker().then(() => {
+        console.log('Service Worker and cache refresh complete.');
+    });
+
+    // Check for updates on page load
+    window.addEventListener('load', async () => {
+        const registration = await navigator.serviceWorker.ready;
+        if (registration.waiting) {
+            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+        } else if (registration.active) {
+            registration.update();
+        }
+    });
+} else {
+    console.log('Service Worker not supported in this browser.');
+}
+
+</script>
 </body>
 </html>
