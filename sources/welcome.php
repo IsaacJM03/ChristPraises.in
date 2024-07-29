@@ -40,6 +40,14 @@ $wo['content']     = Wo_LoadPage('welcome/content');
                 iosPWASplash('../splash_screens/icon.png', '#ffffff');
             });
     </script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "ae75fe66-ac4f-45d5-a30c-6499fa979085",
+    });
+  });
+</script>
 </head>
 <body>
 <script>
@@ -51,11 +59,11 @@ if ('serviceWorker' in navigator) {
             await registration.unregister();
         }
 
-        // Clear all caches
-        const cacheNames = await caches.keys();
-        for (let cacheName of cacheNames) {
-            await caches.delete(cacheName);
-        }
+        // // Clear all caches
+        // const cacheNames = await caches.keys();
+        // for (let cacheName of cacheNames) {
+        //     await caches.delete(cacheName);
+        // }
 
         // Register the new service worker
         try {
@@ -96,5 +104,6 @@ if ('serviceWorker' in navigator) {
 }
 
 </script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 </body>
 </html>
